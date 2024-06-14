@@ -3,7 +3,7 @@
 import sys
 from ncclient import manager
 
-DEVICES = ['10.48.168.22']
+DEVICES = ['10.48.168.22','10.48.168.101','10.48.168.250']
 USER = 'automation'
 PASS = 'cisco'
 PORT = 830
