@@ -1,0 +1,10 @@
+---
+- name: VLAN CONFIGURATION
+  hosts: NXOS
+  gather_facts: false
+
+  tasks:
+    - name: diff the running-config against a provided config
+      nxos_config:
+        diff_against: intended
+        intended_config: "{{ lookup('file', './backup/{{ inventory_hostname }}_backup.cfg') }}"

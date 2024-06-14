@@ -1,0 +1,17 @@
+---
+- name: Gather NXOS Facts
+  hosts: NXOS
+  gather_facts: false
+  connection: local
+
+  tasks:
+    - name: Get Facts for NXOS
+      cisco.nxos.nxos_facts:
+        gather_subset:
+          - min
+      register: nxos_facts
+
+    - name: Show Facts for NXOS
+      debug:
+        msg: "{{ nxos_facts['ansible_facts']['ansible_net_model'] }} running {{ nxos_facts['ansible_facts']['ansible_net_version'] }}"
+

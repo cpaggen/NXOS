@@ -1,0 +1,42 @@
+---
+- name: NXOS 9K Upgrade Playbook
+  hosts: NXOS
+  gather_facts: false
+  vars:
+    target_nxos_ver: 10.4(3)
+
+  tasks:
+    - name: Backup the config for {{ inventory_hostname }}
+      tags: backup, install
+      nxos_config:
+        backup: yes
+        backup_options:
+          filename: "{{ inventory_hostname }}_backup.cfg"
+          dir_path: ./backup
+      register: config_output
+
+    - name: Get current NXOS version in JSON format
+      tags: pre-check, check-version, post-check, install
+      nxos_command:
+        commands: show version | json-pretty
+      register: show_version
+
+    - name: Set current NXOS version as variable
+      tags: pre-check, check-version, post-check, install
+      set_fact:
+        current_nxos_ver: "{{ show_version['stdout_lines'][0]['nxos_ver_str'] }}"
+
+    - name: Fetch current NXOS version
+      debug:
+        msg: "{{ current_nxos_ver }}"
+
+    - name: Assert that switch is NOT running with the target NXOS version
+      tags: pre-check, check-version, install
+      assert:
+        quiet: no
+        success_msg: "{{ inventory_hostname }} not running target verion {{ target_nxos_ver }}, current version is {{ current_nxos_ver }}"
+        fail_msg: "{{ inventory_hostname }} already running {{ current_nxos_ver }}"
+        that:
+        - current_nxos_ver != target_nxos_ver
+
+

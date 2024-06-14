@@ -1,0 +1,32 @@
+---
+- name: Restconf playbook for NXOS for Native Yang Model
+  hosts: NXOS
+  gather_facts: false
+
+  tasks:
+    - name: Get NXOS device config - system yang model 
+      ansible.netcommon.restconf_get:
+        content: config
+        output: json
+        path: /data/Cisco-NX-OS-device:System/
+      register: system_output
+
+    - debug: var=system_output.response
+
+    - name: Get NXOS device hostname
+      ansible.netcommon.restconf_get:
+        content: all
+        output: json
+        path: /data/Cisco-NX-OS-device:System/name/
+      register: hostname_output
+
+    - debug: var=hostname_output.response
+
+    - name: Get NTP config for nxos 
+      ansible.netcommon.restconf_get:
+        content: all
+        output: json
+        path: /data/Cisco-NX-OS-device:System/time-items/prov-items/
+      register: restconf_ntp_output
+
+    - debug: var=restconf_ntp_output.response

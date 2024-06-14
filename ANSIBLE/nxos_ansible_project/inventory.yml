@@ -1,0 +1,11 @@
+all:
+  children:
+    NXOS:
+      hosts:
+        leaf1:
+          ansible_host: 10.48.168.22
+        leaf2:
+          ansible_host: 10.48.168.101
+        border:
+          ansible_host: 10.48.168.250
+    ungrouped: {}
