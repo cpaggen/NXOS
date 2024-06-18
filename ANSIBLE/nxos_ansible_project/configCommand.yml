@@ -1,0 +1,12 @@
+---
+- name: Send arbitrary config mode NXOS CLI command
+  hosts: NXOS
+  gather_facts: no
+
+  tasks:
+    - name: Send generic config mode NXOS CLI command
+      cisco.nxos.nxos_config:
+        lines: nxapi https port 443 
+        save_when: modified
+      register: output
+

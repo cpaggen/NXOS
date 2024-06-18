@@ -1,0 +1,19 @@
+---
+- name: Send arbitrary exec emode NXOS CLI command
+  hosts: NXOS
+  gather_facts: no
+  vars:
+    nxos_commands:
+      - show version | grep -i nx
+      - show grpc gnmi service statistics
+  tasks:
+    - name: Send generic exec mode NXOS CLI command
+      cisco.nxos.nxos_command:
+        commands: "{{ item }}"
+      loop: "{{ nxos_commands }}"
+      register: nxoutput
+
+    - name: Print result
+      debug:
+        var: item.stdout_lines[0]
+      loop: "{{ nxoutput.results }}"
