@@ -1,5 +1,8 @@
 from pprint import pprint
 from pygnmi.client import gNMIclient
+import re
+
+pattern = r"eth(\d+)/(\d+)"
 
 inventory = [{
                 "host": "10.48.168.22",
@@ -31,5 +34,13 @@ if __name__ == "__main__":
                         username=device["auth_username"],
                         password=device["auth_password"],
                         skip_verify=True) as gconn:
-            pprint(gconn.get(path=["/System/lldp-items/inst-items/if-items/If-list/adj-items/AdjEp-list/sysName"]))
+            print(f"LLDP entries for {device['host']}:")
+            lldp = gconn.get(path=["/System/lldp-items/inst-items/if-items/If-list/adj-items/AdjEp-list/sysName"])
+            for neighbor in lldp['notification'][0]['update']:
+                path = neighbor['path']
+                dev  = neighbor['val']
+                match = re.search(pattern, path)
+                if match:
+                    print(f"{match.group(0)} ==> {dev}")
+
 
