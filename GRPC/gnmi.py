@@ -35,12 +35,13 @@ if __name__ == "__main__":
                         password=device["auth_password"],
                         skip_verify=True) as gconn:
             print(f"LLDP entries for {device['host']}:")
-            lldp = gconn.get(path=["/System/lldp-items/inst-items/if-items/If-list/adj-items/AdjEp-list/sysName"])
+            lldp = gconn.get(path=["/System/lldp-items/inst-items/if-items/If-list/adj-items/AdjEp-list/"])
             for neighbor in lldp['notification'][0]['update']:
                 path = neighbor['path']
-                dev  = neighbor['val']
+                dev  = neighbor['val'][0]['sysName']
+                port = neighbor['val'][0]['portIdV']
                 match = re.search(pattern, path)
                 if match:
-                    print(f"{match.group(0)} ==> {dev}")
+                    print(f"\t{match.group(0)} ==> {dev}[{port}]")
 
 
