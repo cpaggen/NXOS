@@ -2,7 +2,7 @@ from pprint import pprint
 from pygnmi.client import gNMIclient
 import re
 
-pattern = r"eth(\d+)/(\d+)"
+pattern = r"eth(\d+)(/(\d+))?"
 
 inventory = [{
                 "host": "10.48.168.22",
